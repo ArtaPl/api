@@ -22,6 +22,7 @@ from yt_dlp import YoutubeDL
 
 from config import BOT_USERNAME as bn
 from driver.decorators import humanbytes
+from driver.decorators import sudo_users_only
 from driver.filters import command, other_filters
 
 
@@ -35,7 +36,7 @@ ydl_opts = {
 }
 
 
-@Client.on_message(command(["song", f"song@{bn}"]) & ~filters.edited)
+@Client.on_message(command(["kiarta", f"kiarta@{bn}"]) & ~filters.edited)
 def song(_, message):
     query = " ".join(message.command[1:])
     m = message.reply("🔎 finding song...")
@@ -89,6 +90,7 @@ def song(_, message):
 @Client.on_message(
     command(["vsong", f"vsong@{bn}", "video", f"video@{bn}"]) & ~filters.edited
 )
+@sudo_users_only 
 async def vsong(client, message):
     ydl_opts = {
         "format": "best",

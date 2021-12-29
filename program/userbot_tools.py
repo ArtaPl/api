@@ -9,9 +9,9 @@ from driver.decorators import authorized_users_only, sudo_users_only
 
 
 @Client.on_message(
-    command(["userbotjoin", f"userbotjoin@{BOT_USERNAME}"]) & ~filters.private & ~filters.bot
+    command(["add", f"userbotjoin@{BOT_USERNAME}"]) & ~filters.private & ~filters.bot
 )
-@authorized_users_only
+@sudo_users_only
 async def join_chat(c: Client, m: Message):
     chat_id = m.chat.id
     try:
@@ -23,7 +23,7 @@ async def join_chat(c: Client, m: Message):
             (await user.get_me()).id,
             can_manage_voice_chats=True
         )
-        return await user.send_message(chat_id, "✅ userbot entered chat")
+        return await user.send_message(chat_id, "✅ ربات در گروه اضافه شد")
     except UserAlreadyParticipant:
         admin = await m.chat.get_member((await user.get_me()).id)
         if not admin.can_manage_voice_chats:
@@ -35,17 +35,17 @@ async def join_chat(c: Client, m: Message):
         return await user.send_message(chat_id, "✅ userbot already in chat")
 
 
-@Client.on_message(command(["userbotleave",
+@Client.on_message(command(["leave",
                             f"leave@{BOT_USERNAME}"]) & filters.group & ~filters.edited
 )
-@authorized_users_only
+@sudo_users_only
 async def leave_chat(_, m: Message):
     chat_id = m.chat.id
     try:
         await user.leave_chat(chat_id)
         return await _.send_message(
             chat_id,
-            "✅ userbot leaved chat",
+            "✅ ربات از گروه خارج میشود",
         )
     except UserNotParticipant:
         return await _.send_message(

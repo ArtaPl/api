@@ -53,38 +53,31 @@ async def _human_time_duration(seconds):
 )
 async def start_(client: Client, message: Message):
     await message.reply_text(
-        f"""✨ **Welcome {message.from_user.mention()} !**\n
-💭 [{BOT_NAME}](https://t.me/{BOT_USERNAME}) **Allows you to play music and video on groups through the new Telegram's video chats!**
+        f"""✨ **سلام {message.from_user.mention()} !**\n
+💭 به ربات[{BOT_NAME}](https://t.me/{BOT_USERNAME}) خوش آمدید \n ** کار من پخش موزیک و ویدیو توی ویسکاله**
 
-💡 **Find out all the Bot's commands and how they work by clicking on the » 📚 Commands button!**
+💡 جهت خرید به پیوی زیر مراجعه کنید
 
-🔖 **To know how to use this bot, please click on the » ❓ Basic Guide button!**
+      @{OWNER_NAME}
+
+🔖 ** بهترین ها بهترین ها را میخاهند ! **
 """,
         reply_markup=InlineKeyboardMarkup(
             [
                 [
                     InlineKeyboardButton(
-                        "➕ Add me to your Group ➕",
-                        url=f"https://t.me/{BOT_USERNAME}?startgroup=true",
+                        "➕ خرید و افزودن ربات ➕",
+                        url=f"https://t.me/{OWNER_NAME}",
                     )
                 ],
-                [InlineKeyboardButton("❓ Basic Guide", callback_data="cbhowtouse")],
-                [
-                    InlineKeyboardButton("📚 Commands", callback_data="cbcmds"),
-                    InlineKeyboardButton("❤️ Donate", url=f"https://t.me/{OWNER_NAME}"),
-                ],
+
                 [
                     InlineKeyboardButton(
-                        "👥 Official Group", url=f"https://t.me/{GROUP_SUPPORT}"
+                        "👥 گروه پشتیبانی", url=f"https://t.me/{GROUP_SUPPORT}"
                     ),
                     InlineKeyboardButton(
-                        "📣 Official Channel", url=f"https://t.me/{UPDATES_CHANNEL}"
+                        "📣 کانال پشتیبانی", url=f"https://t.me/{UPDATES_CHANNEL}"
                     ),
-                ],
-                [
-                    InlineKeyboardButton(
-                        "🌐 Source Code", url="https://github.com/levina-lab/video-stream"
-                    )
                 ],
             ]
         ),
@@ -103,15 +96,15 @@ async def alive(client: Client, message: Message):
     keyboard = InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton("✨ Group", url=f"https://t.me/{GROUP_SUPPORT}"),
+                InlineKeyboardButton("✨ گروه پشتیبانی", url=f"https://t.me/{GROUP_SUPPORT}"),
                 InlineKeyboardButton(
-                    "📣 Channel", url=f"https://t.me/{UPDATES_CHANNEL}"
+                    "📣 کانال پشتیبانی", url=f"https://t.me/{UPDATES_CHANNEL}"
                 ),
             ]
         ]
     )
 
-    alive = f"**Hello {message.from_user.mention()}, i'm {BOT_NAME}**\n\n✨ Bot is working normally\n🍀 My Master: [{ALIVE_NAME}](https://t.me/{OWNER_NAME})\n✨ Bot Version: `v{__version__}`\n🍀 Pyrogram Version: `{pyrover}`\n✨ Python Version: `{__python_version__}`\n🍀 PyTgCalls version: `{pytover.__version__}`\n✨ Uptime Status: `{uptime}`\n\n**Thanks for Adding me here, for playing video & music on your Group's video chat** ❤"
+    alive = f"**سلام {message.from_user.mention()} من {BOT_NAME}**\n\n✨ ربات در وضعیت نرمال میباشد\n🍀 مالک من: [{ALIVE_NAME}](https://t.me/{OWNER_NAME})\n✨ ورژن ربات: `v{__version__}`\n🍀 ورژن پایروگرام: `{pyrover}`\n✨ اپتایم: `{uptime}`\n\n**ممنونم از اینک من رو به گروهتون اضافه کردید ، بهترین اوقات رو براتون آرزومندم** ❤"
 
     await message.reply_photo(
         photo=f"{ALIVE_IMG}",
@@ -147,17 +140,16 @@ async def new_chat(c: Client, m: Message):
     for member in m.new_chat_members:
         if member.id == bot_id:
             return await m.reply(
-                "❤️ **Thanks for adding me to the Group !**\n\n"
-                "**Promote me as administrator of the Group, otherwise I will not be able to work properly, and don't forget to type /userbotjoin for invite the assistant.**\n\n"
-                "**Once done, type** /reload",
+                "❤️ **سلام جهت استفاده از ربات به مالک پیغام دهید.**\n\n"
+                "متشکریم",
                 reply_markup=InlineKeyboardMarkup(
                     [
                         [
-                            InlineKeyboardButton("📣 Channel", url=f"https://t.me/{UPDATES_CHANNEL}"),
-                            InlineKeyboardButton("💭 Support", url=f"https://t.me/{GROUP_SUPPORT}")
+                            InlineKeyboardButton("📣 کانال پشتیبانی", url=f"https://t.me/{UPDATES_CHANNEL}"),
+                            InlineKeyboardButton("💭 گروه پشتیبانی", url=f"https://t.me/{GROUP_SUPPORT}")
                         ],
                         [
-                            InlineKeyboardButton("👤 Assistant", url=f"https://t.me/{ass_uname}")
+                            InlineKeyboardButton("👤 دستیار ربات", url=f"https://t.me/{ass_uname}")
                         ]
                     ]
                 )

@@ -9,6 +9,7 @@ from config import ASSISTANT_NAME, BOT_USERNAME, IMG_1, IMG_2
 from driver.filters import command, other_filters
 from driver.queues import QUEUE, add_to_queue
 from driver.veez import call_py, user
+from driver.decorators import authorized_users_only
 from pyrogram import Client
 from pyrogram.errors import UserAlreadyParticipant, UserNotParticipant
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
@@ -54,7 +55,8 @@ async def ytdl(link):
         return 0, stderr.decode()
 
 
-@Client.on_message(command(["vplay", f"vplay@{BOT_USERNAME}"]) & other_filters)
+@Client.on_message(command(["vplay", f"vplay@{BOT_USERNAME}","ویدیو"]) & other_filters)
+@authorized_users_only
 async def vplay(c: Client, m: Message):
     await m.delete()
     replied = m.reply_to_message
@@ -62,8 +64,8 @@ async def vplay(c: Client, m: Message):
     keyboard = InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton(text="• Mᴇɴᴜ", callback_data="cbmenu"),
-                InlineKeyboardButton(text="• Cʟᴏsᴇ", callback_data="cls"),
+                InlineKeyboardButton(text="• منو", callback_data="cbmenu"),
+                InlineKeyboardButton(text="• بستن", callback_data="cls"),
             ]
         ]
     )
@@ -92,37 +94,6 @@ async def vplay(c: Client, m: Message):
     if not a.can_invite_users:
         await m.reply_text("missing required permission:" + "\n\n» ❌ __Add users__")
         return
-    try:
-        ubot = (await user.get_me()).id
-        b = await c.get_chat_member(chat_id, ubot)
-        if b.status == "kicked":
-            await m.reply_text(
-                f"@{ASSISTANT_NAME} **is banned in group** {m.chat.title}\n\n» **unban the userbot first if you want to use this bot.**"
-            )
-            return
-    except UserNotParticipant:
-        if m.chat.username:
-            try:
-                await user.join_chat(m.chat.username)
-            except Exception as e:
-                await m.reply_text(f"❌ **userbot failed to join**\n\n**reason**: `{e}`")
-                return
-        else:
-            try:
-                invitelink = await c.export_chat_invite_link(
-                    m.chat.id
-                )
-                if invitelink.startswith("https://t.me/+"):
-                    invitelink = invitelink.replace(
-                        "https://t.me/+", "https://t.me/joinchat/"
-                    )
-                await user.join_chat(invitelink)
-            except UserAlreadyParticipant:
-                pass
-            except Exception as e:
-                return await m.reply_text(
-                    f"❌ **userbot failed to join**\n\n**reason**: `{e}`"
-                )
 
     if replied:
         if replied.video or replied.document:
@@ -298,6 +269,7 @@ async def vplay(c: Client, m: Message):
 
 
 @Client.on_message(command(["vstream", f"vstream@{BOT_USERNAME}"]) & other_filters)
+@authorized_users_only
 async def vstream(c: Client, m: Message):
     await m.delete()
     chat_id = m.chat.id
@@ -334,38 +306,6 @@ async def vstream(c: Client, m: Message):
     if not a.can_invite_users:
         await m.reply_text("missing required permission:" + "\n\n» ❌ __Add users__")
         return
-    try:
-        ubot = (await user.get_me()).id
-        b = await c.get_chat_member(chat_id, ubot)
-        if b.status == "kicked":
-            await m.reply_text(
-                f"@{ASSISTANT_NAME} **is banned in group** {m.chat.title}\n\n» **unban the userbot first if you want to use this bot.**"
-            )
-            return
-    except UserNotParticipant:
-        if m.chat.username:
-            try:
-                await user.join_chat(m.chat.username)
-            except Exception as e:
-                await m.reply_text(f"❌ **userbot failed to join**\n\n**reason**: `{e}`")
-                return
-        else:
-            try:
-                invitelink = await c.export_chat_invite_link(
-                    m.chat.id
-                )
-                if invitelink.startswith("https://t.me/+"):
-                    invitelink = invitelink.replace(
-                        "https://t.me/+", "https://t.me/joinchat/"
-                    )
-                await user.join_chat(invitelink)
-            except UserAlreadyParticipant:
-                pass
-            except Exception as e:
-                return await m.reply_text(
-                    f"❌ **userbot failed to join**\n\n**reason**: `{e}`"
-                )
-
     if len(m.command) < 2:
         await m.reply("» give me a live-link/m3u8 url/youtube link to stream.")
     else:
@@ -433,9 +373,9 @@ async def vstream(c: Client, m: Message):
                     )
                     await m.reply_photo(
                         photo=f"{IMG_2}",
-                        caption=f"💡 **[Video live]({link}) stream started.**\n\n💭 **Chat:** `{chat_id}`\n💡 **Status:** `Playing`\n🎧 **Request by:** {requester}",
+                        caption=f"💡 **[پخش تصویری]({link}) stream شروع شد.**\n\n💭 **گروه:** `{chat_id}`\n💡 **وضعیت:** `درحال پخش`\n🎧 **به درخواست:** {requester}",
                         reply_markup=keyboard,
                     )
                 except Exception as ep:
                     await loser.delete()
-                    await m.reply_text(f"🚫 error: `{ep}`")
+                    await m.reply_text(f"🚫 مشکل: `{ep}`")

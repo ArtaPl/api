@@ -16,37 +16,30 @@ from config import (
 @Client.on_callback_query(filters.regex("cbstart"))
 async def cbstart(_, query: CallbackQuery):
     await query.edit_message_text(
-        f"""✨ **Welcome [{query.message.chat.first_name}](tg://user?id={query.message.chat.id}) !**\n
-💭 **[{BOT_NAME}](https://t.me/{BOT_USERNAME}) allows you to play music and video on groups through the new Telegram's video chats!**
+        f"""✨ **سلام [{query.message.chat.first_name}](tg://user?id={query.message.chat.id}) !**\n
+💭 ** به ربات[{BOT_NAME}](https://t.me/{BOT_USERNAME}) خوش آمدید \n کار من پخش موزیک و ویدیو توی ویسکاله
 
-💡 **Find out all the Bot's commands and how they work by clicking on the » 📚 Commands button!**
+💡 جهت خرید به پیوی زیر مراجعه کنید
 
-🔖 **To know how to use this bot, please click on the » ❓ Basic Guide button!**""",
+      @{OWNER_NAME}
+
+🔖 ** بهترین ها بهترین ها را میخاهند !
+""",
         reply_markup=InlineKeyboardMarkup(
             [
                 [
                     InlineKeyboardButton(
-                        "➕ Add me to your Group ➕",
-                        url=f"https://t.me/{BOT_USERNAME}?startgroup=true",
+                        "➕ خرید و افزودن ربات ➕",
+                        url=f"https://t.me/{OWNER_NAME}",
                     )
                 ],
-                [InlineKeyboardButton("❓ Basic Guide", callback_data="cbhowtouse")],
-                [
-                    InlineKeyboardButton("📚 Commands", callback_data="cbcmds"),
-                    InlineKeyboardButton("❤ Donate", url=f"https://t.me/{OWNER_NAME}"),
-                ],
                 [
                     InlineKeyboardButton(
-                        "👥 Official Group", url=f"https://t.me/{GROUP_SUPPORT}"
+                        "👥 گروه پشتیبانی", url=f"https://t.me/{GROUP_SUPPORT}"
                     ),
                     InlineKeyboardButton(
-                        "📣 Official Channel", url=f"https://t.me/{UPDATES_CHANNEL}"
+                        "📣 کانال پشتیبانی", url=f"https://t.me/{UPDATES_CHANNEL}"
                     ),
-                ],
-                [
-                    InlineKeyboardButton(
-                        "🌐 Source Code", url="https://github.com/levina-lab/video-stream"
-                    )
                 ],
             ]
         ),
@@ -169,14 +162,14 @@ async def cbsudo(_, query: CallbackQuery):
 @Client.on_callback_query(filters.regex("cbmenu"))
 async def cbmenu(_, query: CallbackQuery):
     if query.message.sender_chat:
-        return await query.answer("you're an Anonymous Admin !\n\n» revert back to user account from admin rights.")
+        return await query.answer("شما یک مدیر ناشناس هستید!\n\n» از حقوق سرپرست به حساب کاربری برگردید.")
     a = await _.get_chat_member(query.message.chat.id, query.from_user.id)
     if not a.can_manage_voice_chats:
-        return await query.answer("💡 only admin with manage voice chats permission that can tap this button !", show_alert=True)
+        return await query.answer("💡 فقط مدیر دارای مجوز مدیریت چت صوتی است که می تواند روی این دکمه ضربه بزند!", show_alert=True)
     chat_id = query.message.chat.id
     if chat_id in QUEUE:
           await query.edit_message_text(
-              f"⚙️ **settings of** {query.message.chat.title}\n\n⏸ : pause stream\n▶️ : resume stream\n🔇 : mute userbot\n🔊 : unmute userbot\n⏹ : stop stream",
+              f"⚙️ **تنظیمات گروه** {query.message.chat.title}\n○●○●○●○●○●○●\nتوضیحات در رابطه با دکمه های زیر:\n\n⏸ : مکث پخش\n▶️ : ادامه پخش\n🔇 : بیصدا پخش کننده\n🔊 : باصدا پخش کننده\n⏹ : توقف پخش\n\n○●○●○●○●○●○●",
               reply_markup=InlineKeyboardMarkup(
                   [[
                       InlineKeyboardButton("⏹", callback_data="cbstop"),
@@ -186,17 +179,17 @@ async def cbmenu(_, query: CallbackQuery):
                       InlineKeyboardButton("🔇", callback_data="cbmute"),
                       InlineKeyboardButton("🔊", callback_data="cbunmute"),
                   ],[
-                      InlineKeyboardButton("🗑 Close", callback_data="cls")],
+                      InlineKeyboardButton("🗑 بستن", callback_data="cls")],
                   ]
              ),
          )
     else:
-        await query.answer("❌ nothing is currently streaming", show_alert=True)
+        await query.answer("❌ چیزی در حال پخش نیست.", show_alert=True)
 
 
 @Client.on_callback_query(filters.regex("cls"))
 async def close(_, query: CallbackQuery):
     a = await _.get_chat_member(query.message.chat.id, query.from_user.id)
     if not a.can_manage_voice_chats:
-        return await query.answer("💡 only admin with manage voice chats permission that can tap this button !", show_alert=True)
+        return await query.answer("💡 فقط مدیر دارای مجوز مدیریت چت صوتی است که می تواند روی این دکمه ضربه بزند!", show_alert=True)
     await query.message.delete()

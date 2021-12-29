@@ -52,21 +52,6 @@ def updater():
     changelog, tl_chnglog = gen_chlog(repo, f"HEAD..upstream/{ac_br}")
     return bool(changelog)
 
-
-@Client.on_message(command(["update", f"update@{BOT_USERNAME}"]) & ~filters.edited)
-@sudo_users_only
-async def update_repo(_, message: Message):
-    chat_id = message.chat.id
-    msg = await message.reply("🔄 `processing update...`")
-    update_avail = updater()
-    if update_avail:
-        await msg.edit("✅ update finished\n\n• bot restarted, back active again in 1 minutes.")
-        system("git pull -f && pip3 install -r requirements.txt")
-        execle(sys.executable, sys.executable, "main.py", environ)
-        return
-    await msg.edit("bot is **up-to-date** with [main](https://github.com/levina-lab/video-stream/tree/main)", disable_web_page_preview=True)
-
-
 @Client.on_message(command(["restart", f"restart@{BOT_USERNAME}"]) & ~filters.edited)
 @sudo_users_only
 async def restart_bot(_, message: Message):
